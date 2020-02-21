@@ -1,16 +1,16 @@
 import produce from "immer"
 
-export const getActionMap = (reducer, namespace) => {
-  return Object.keys(reducer).reduce((actionMap, actionName) => {
-    actionMap[actionName] = namespace + '/' + actionName
-    return actionMap
-  }, {})
-}
+export const getActionMap = (reducer, namespace) => Object.keys(reducer)
+  .reduce((actionMap, actionName) => ({
+    ...actionMap,
+    [actionName]: namespace + '/' + actionName
+  }), {})
 
 const getKey = (str, flag) => {
   const i = str.indexOf(flag)
   return str.substring(i + 1, str.length + 1)
 }
+
 export const handleActions = ({ state, action, reducers, namespace = '' }) =>
   Object.keys(reducers)
     .map(key => namespace + '/' + key)
