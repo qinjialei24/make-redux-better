@@ -1,4 +1,4 @@
-import { handleActions } from "../util";
+import { handleActions, getActionMap } from "../util";
 
 const initialState = {
   inputValue: '123',
@@ -16,9 +16,14 @@ const reducers = {
   }
 }
 
-export default (state = initialState, action) => handleActions({
+const fn = (state = initialState, action) => handleActions({
   state,
   action,
   reducers,
   namespace: 'todo'
 })
+
+fn.action = getActionMap(reducers, 'todo')
+console.log("TCL: fn.action", fn.action)
+
+export default fn
