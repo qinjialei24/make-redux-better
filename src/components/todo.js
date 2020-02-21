@@ -27,7 +27,9 @@ export class Todo extends React.Component {
     //   type: 'todo/add',
     //   data: this.state.inputValue
     // })
+
     // store.dispatch('todo/add', this.state.inputValue)
+    
     store.dispatch(store.todo.add, this.state.inputValue)
   }
 
