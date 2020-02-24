@@ -1,4 +1,4 @@
-import { handleActions, getActionMap } from "../util";
+import { handleActions, getReducerEffectMap } from "../util";
 
 
 const initialState = {
@@ -21,7 +21,7 @@ const fn = (state = initialState, action) => handleActions({
   reducers,
 })
 
-fn.action = getActionMap(reducers, 'counter')
+fn.action = getReducerEffectMap(reducers, 'counter')
 console.log("TCL: fn.action", fn.action)
 
 

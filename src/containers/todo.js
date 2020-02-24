@@ -14,6 +14,7 @@ const mapDispatchToProps = dispatch => {
   return {
     addItem: data => {
       dispatch(store.todo.add, data)
+      // dispatch(store.todo.asyncAdd, data)
     },
     inputChange: data => {
       dispatch(store.todo.changeInput, data.target.value)

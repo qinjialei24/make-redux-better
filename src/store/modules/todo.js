@@ -19,12 +19,18 @@ const model = {
     },
   },
   effect: {
-    asyncAdd(reducer, payload) {
-      setTimeout(() => {
-        reducer.add({
-          payload: '222'
-        })
-      }, 1000);
+    asyncAdd(reducer, data, state) {
+      reducer.add(state, {
+        data
+      })
+      console.log("TCL: Add -> state", state)
+      console.log("TCL: Add -> data", data)
+      console.log('reducer.add 的值是：', reducer.add);
+      // setTimeout(() => {
+      //   reducer.add(state, {
+      //     data
+      //   })
+      // }, 1000);
     }
   }
 }

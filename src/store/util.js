@@ -1,6 +1,8 @@
 import produce from "immer"
 
-export const getActionMap = (reducer, namespace) => Object.keys(reducer)
+// /* TODO: */ reducer 和 effect 重名时 给予警告
+// /* TODO: */ 考虑 reducer 和 effect 不存在 或者为空对象的情况
+export const getReducerEffectMap = (reducerAndEffect, namespace) => Object.keys(reducerAndEffect)
   .reduce((actionMap, actionName) => ({
     ...actionMap,
     [actionName]: namespace + '/' + actionName
@@ -18,12 +20,32 @@ export const handleActions = ({ state, action, reducers, namespace = '' }) =>
     ? produce(state, draft => reducers[getKey(action.type, '/')](draft, action))
     : state
 
-export const formatModel = ({ state, action, reducer, namespace = '' }) =>
-  Object.keys(reducer)
-    .map(key => namespace + '/' + key)
-    .includes(action.type)
-    ? produce(state, draft => reducer[getKey(action.type, '/')](draft, action))
-    : state
+// export const formatModel = ({ state, action, reducer, effect, namespace = '' }) =>
+//   Object.keys(reducer)
+//     .map(key => namespace + '/' + key)
+//     .includes(action.type)
+//     ? produce(state, draft => reducer[getKey(action.type, '/')](draft, action))
+//     : state
+
+export const formatModel = ({ state, action, reducer, effect, namespace = '' }) => {
+  const reducerKey = Object.keys(reducer).map(key => namespace + '/' + key)
+  const effectKey = Object.keys(effect).map(key => namespace + '/' + key)
+
+  // 触发的是 reducer
+  if (reducerKey.includes(action.type)) {
+    return produce(state, draft => reducer[getKey(action.type, '/')](draft, action))
+  }
+
+  // 触发的是 effect
+  // if (effectKey.includes(action.type)) {
+  //   const effectFn = effect[getKey(action.type, '/')]
+  //   effectFn(reducer, action.data, state)
+  // }
+  else {
+    return state
+  }
+}
+
 
 export const handleEffect = (effect = {}) => {
 
@@ -31,14 +53,15 @@ export const handleEffect = (effect = {}) => {
 
 
 export const createModel = (model) => {
-  const { reducer, namespace } = model
+  const { reducer, effect, namespace } = model
   const fn = (state = model.state, action) => formatModel({
     state,
     action,
     reducer,
+    effect,
     namespace
   })
-  // 通过 reducer 的函数名 生成对应的 action，
-  fn.action = getActionMap(reducer, namespace)
+  // 通过 reducer 和 effect 的函数名 生成对应的 action，
+  fn.action = getReducerEffectMap({ ...reducer, ...effect }, namespace)
   return fn
 }
