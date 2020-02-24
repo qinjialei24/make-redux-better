@@ -65,3 +65,15 @@ export const createModel = (model) => {
   fn.action = getReducerEffectMap({ ...reducer, ...effect }, namespace)
   return fn
 }
+
+// 增加 modules 属性 存储所有模块
+const initModules = store => {
+  // store[modules] = {}
+}
+
+export const init = store => {
+  // initModules(store)
+
+  return store
+
+} 

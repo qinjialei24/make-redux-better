@@ -1,6 +1,7 @@
 import { createStore, combineReducers } from "redux";
 import todo from "./modules/todo";
 import counter from "./modules/counter";
+import { init } from "./util";
 
 const setActionToStore = (store, reducerModules) => {
   Object.keys(reducerModules).forEach(moduleName => {
@@ -13,16 +14,18 @@ const reducerModules = {
   counter,
 }
 
-const store = createStore(
+const _store = createStore(
   combineReducers(reducerModules),
   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 )
 
-setActionToStore(store, reducerModules)
+setActionToStore(_store, reducerModules)
 
-const _dispatch = store.dispatch
+const _dispatch = _store.dispatch
 
-store.dispatch = (type, data) => _dispatch({ type, data })
+_store.dispatch = (type, data) => _dispatch({ type, data })
+
+const store = init(_store)
 
 
 export default store
